@@ -36,8 +36,8 @@ fun main(args: Array<String>) {
 }
 
 fun doTheDivisionThingy(list: List<Int>): Int {
-    return list.drop(1)
+    return list.subList(1, list.size)
             .filter { list.first() % it == 0 }
             .map { list.first() / it }
-            .firstOrNull() ?: doTheDivisionThingy(list.drop(1))
+            .firstOrNull() ?: doTheDivisionThingy(list.subList(1, list.size))
 }
