@@ -1188,11 +1188,15 @@ tnmtz (26)""".lines()
             }).mapValues { it.value[0] }
             .mapValues { Pair(it.value[0].toInt(), it.value.subList(1, it.value.size)) }
 
-    treeMap.mapValues { Pair(it.value.first, it.value.second.map { Pair(it, weight(it, treeMap)) }) }
-            .filterValues { it.second.map { it.second }.distinct().size > 1 }.entries.forEach{
-        println(it)
+    var unevenValues = treeMap.mapValues { Pair(it.value.first, it.value.second.map { Pair(it, weight(it, treeMap)) }) }
+            .filterValues { it.second.map { it.second }.distinct().size > 1 }
+    while (unevenValues.size > 1) {
+        unevenValues = unevenValues.filterKeys { unevenValues.values.flatMap { it.second }.map { it.first }.contains(it) }
     }
+    val grouped = unevenValues.values.flatMap { it.second }.groupBy { it.second }.values.groupBy { it.size }
+    val toChange = grouped[grouped.keys.min()!!]!![0][0]
 
+    print(treeMap[toChange.first]!!.first - (toChange.second - grouped[grouped.keys.max()!!]!![0][0].second))
 
 }
 
